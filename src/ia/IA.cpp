@@ -184,7 +184,7 @@ int ia_novice(int move)
         return result;
     }
     
-    return random_ia();
+    return random_ia(move);
 }
 
 void test_triplet_win_loose(int point, int p2, int p3, int& win, int& loose)
@@ -269,11 +269,6 @@ void test_case_win_loose(std::array<bool, 8>& has_been_tested, int pos, int& win
 
 int ia_intermédiaire(int move)
 {
-    std::cout << "vec: ";
-    for (int i = 0; i < empty_spaces.size(); i++)
-    {
-        std::cout << empty_spaces[i] << ", ";
-    }
     std::cout << std::endl;
     std::array<bool, 8> has_been_tested = {(false)}; //indique si un groupe de 3 cases a déjà été testé: 1-3 lignes, 4-6 colonnes, 7 et 8 diagonales
     int win = -1;
@@ -296,7 +291,7 @@ int ia_intermédiaire(int move)
         empty_spaces.erase(empty_spaces.begin() + loose);
         return point;
     }
-    return random_ia();
+    return random_ia(move);
 }
 
 std::vector<int> get_all_combos(int pos)
@@ -365,26 +360,26 @@ int best_move()
                 nb_win_loose[i] += 10000;
             }
         }
-        
-        int pos_max = 0;
-        for (int i = 0; i < empty_spaces.size(); i++)
-        {
-            if (nb_win_loose[i] >= 10000)
-            {
-                return i;
-            }
-            
-            if (nb_win_loose[i] > nb_win_loose[pos_max])
-            {
-                pos_max = i;
-            }
-        }
-        return pos_max;
     }
     
+    int pos_max = 0;
+    for (int i = 0; i < empty_spaces.size(); i++)
+    {
+        if (nb_win_loose[i] >= 10000)
+        {
+            return i;
+        }
+        
+        if (nb_win_loose[i] > nb_win_loose[pos_max])
+        {
+            pos_max = i;
+        }
+    }
+
+    return pos_max;
 }
 
-int ia_imbattable(int move)
+int ia_avancé(int move)
 {
     std::vector<int> all_combos = get_all_combos(move);
     for (int i : all_combos)
@@ -392,6 +387,16 @@ int ia_imbattable(int move)
         winnable[i] = 0;
         loosable[i]--;
     }
-    
-    return best_move();
+
+    int res = best_move();
+    int pos = empty_spaces[res];
+    empty_spaces.erase(empty_spaces.begin() + res);
+    all_combos = get_all_combos(pos);
+    for (int i : all_combos)
+    {
+        loosable[i] = 0;
+        winnable[i]--;
+    }
+
+    return pos;
 }

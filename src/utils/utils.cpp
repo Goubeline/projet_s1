@@ -1,12 +1,14 @@
 
 int board_same_line_left(int point)
 {
-    return ((point + 2) % (point / 3 * 3 + 3));
+    int test = ((point + 2) % 3 + (point / 3 * 3));
+    return test;
 }
 
 int board_same_line_right(int point)
 {
-    return ((point + 1) % (point / 3 * 3 + 3));
+    int test = ((point + 1) % 3 + (point / 3 * 3));
+    return test;
 }
 
 int board_same_column_up(int point)

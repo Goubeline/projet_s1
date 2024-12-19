@@ -51,7 +51,7 @@ int update_board(int point, SYMBOL symbole)
             return 1; //victoire
         }
     }
-    if ((point % 4 == 0))
+    if ((point % 4 == 0)) // 0, 4 ou 8
     {
         if (GAME_BOARD[0] == symbole && GAME_BOARD[4] == symbole && GAME_BOARD[8] == symbole)
         {
@@ -147,7 +147,7 @@ int nb_player()
 
             std::cin >> input;
 
-            if (!std::cin.fail() && std::cin.peek() == '\n' && input == 0 || input == 1)
+            if (!std::cin.fail() && std::cin.peek() == '\n' && input == 1 || input == 2)
             {
                 return input;
             }
