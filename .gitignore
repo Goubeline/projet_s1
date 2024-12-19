@@ -1,0 +1,11 @@
+#.exe
+bin/
+
+#garbage
+build/
+
+#vs garbage
+.vs*/
+
+#projets à part
+djikstra/
