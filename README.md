@@ -22,7 +22,13 @@ L'IA novice va vérifier toutes les lignes et colonnes, elle joue sur la premiè
 
 L'IA intermédiaire fait pareil mais elle fait une liste des 8 triplets possibles et les vérifie 1 par 1, le résultat est le même que l'IA novice mais elle priorise un triplet gagnant sur un perdant (d'où la nécessiter de se "souvenir" de quels triplets de cases sont dangeureux).
 
-L'IA avancé donne une valeur à chaque triplet gagnat selon le nombre de coups nécessaires pour gagner ou perdre, et donne ensuite un score à chaque case en fonction, le meilleur score est joué.
+L'IA avancé donne une valeur à chaque triplet gagnant selon le nombre de coups nécessaires pour gagner ou perdre (winnable et loosable). Dans ces 2 array, la valeur dedans est le nombre de coups nécessaire pour remplir le triplet de cases (0 ou moins signifie impossible), par exemple loosable de 0 = 3 signifie que la première ligne a besoin de 3 coups pour être perdue, il n'y a aucun symbole adverse dessus, et comme sa valeur dans loosable a une valeur supérieure à 0 celà veut dire qu'elle est encore perdable, il n'y a donc aucun symbole de l'IA sur la ligne.
+
+Chaque case vide reçoit une valeur en fonction de son potentiel calculé via winnable et loosable, moins il faut de coups pour atteindre une fin de partie plus la valeur augmente, et à nombre de coups égaux, la victoire est prioritaire sur la défaite, donc pour chaque victoire/défaite en 3 coups (triplet de cases vides), la valeur de la case augmente de 1, puis 10 pour chaque défaite en 2 coups, 100 pour victoire en 2, 1000 pour chaque triplet à un coup de la défaite, 10000 pour à un coup de la victoire.
+
+Ensuite, la case avec le meilleur score est trouvé par comparaison (un score de 10000 ou plus provoque un retour automatique, c'est une case de victoire, ça ne sert à rien de continuer à chercher).
+
+L'IA avancée est quasi imbattable, cependant il y a une combinaison de coups qui la met en défaut (tactique classique en joueur contre joueur, elle commence par un premier coup joué sur une case diagonale non centrale, saurez vous trouver la suite ?)
 
 
 
