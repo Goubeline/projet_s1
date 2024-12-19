@@ -99,17 +99,18 @@ int get_input_player(Player& player)
     return point;
 }
 
-int get_input(Player& player)
+int get_input(Player& player, int* last_move)
 {
     int point;
     switch (player.ia_level)
     {
     case 0:
         point = get_input_player(player);
+        *last_move = point;
         break;   
     default:
         std::cout << player.name << " joue" <<std::endl;
-        point = ia_list[player.ia_level - 1].move();
+        point = ia_list[player.ia_level - 1].move(*last_move);
         break;
     }
     return(update_board(point, player.symbole));
@@ -199,10 +200,11 @@ void game()
 
     int result = 0;
     bool tour = 0;
+    int last_move = 100;
     while (result == 0)
     {
         draw_game_board(joueurs[0].dessin, joueurs[1].dessin);
-        result = get_input(joueurs[tour]);
+        result = get_input(joueurs[tour], &last_move);
         tour = !tour;
     }
 

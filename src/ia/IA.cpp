@@ -82,7 +82,7 @@
     // }
 
 
-int random_ia()
+int random_ia(int move)
 {
     srand(time(0));
     int pos = rand() % empty_spaces.size();
@@ -164,21 +164,21 @@ int check_all_diagonals()
     return (result);
 }
 
-int ia_novice()
+int ia_novice(int move)
 {
-    int result = check_all_columns();
+    int result = check_all_diagonals();
+    if (result != -1)
+    {
+        return result;
+    }
+
+    result = check_all_columns();
     if (result != -1)
     {
         return result;
     }
 
     result = check_all_lines();
-    if (result != -1)
-    {
-        return result;
-    }
-
-    result = check_all_diagonals();
     if (result != -1)
     {
         return result;
@@ -267,7 +267,7 @@ void test_case_win_loose(std::array<bool, 8>& has_been_tested, int pos, int& win
     }
 }
 
-int ia_intermédiaire()
+int ia_intermédiaire(int move)
 {
     std::cout << "vec: ";
     for (int i = 0; i < empty_spaces.size(); i++)
@@ -328,19 +328,58 @@ std::vector<int> get_all_combos(int pos)
     return vect;
 }
 
-void best_move()
+int best_move()
 {
-    std::vector<std::array<int, 3>> nb_wins = {};
-    std::vector<std::array<int, 3>> nb_loose = {};
-    int max;
+    std::vector<int> nb_win_loose = {};
+    int test;
     for (int i = 0; i < empty_spaces.size(); i++)
     {
-        nb_wins.push_back({0, 0, 0});
-        for (int i = 0; i < winnable.size(); i++)
+        nb_win_loose.push_back(0);
+
+        std::vector<int> all_combos = get_all_combos(empty_spaces[i]);
+        for (int combo : all_combos)
         {
-            
+            //ligne vide
+            if (winnable[combo] == 3)
+            {
+                nb_win_loose[i]++;
+            }
+
+            //ligne avec 1 symbole
+            if (loosable[combo] == 2)
+            {
+                nb_win_loose[i] += 10;
+            }
+            if (winnable[combo] == 2)
+            {
+                nb_win_loose[i] += 100;
+            }
+
+            //ligne avec 2 symbole identiques
+            if (loosable[combo] == 1)
+            {
+                nb_win_loose[i] += 1000;
+            }
+            if (winnable[combo] == 1)
+            {
+                nb_win_loose[i] += 10000;
+            }
         }
         
+        int pos_max = 0;
+        for (int i = 0; i < empty_spaces.size(); i++)
+        {
+            if (nb_win_loose[i] >= 10000)
+            {
+                return i;
+            }
+            
+            if (nb_win_loose[i] > nb_win_loose[pos_max])
+            {
+                pos_max = i;
+            }
+        }
+        return pos_max;
     }
     
 }
@@ -348,10 +387,11 @@ void best_move()
 int ia_imbattable(int move)
 {
     std::vector<int> all_combos = get_all_combos(move);
-    for (int i = 0; i < all_combos.size(); i++)
+    for (int i : all_combos)
     {
         winnable[i] = 0;
         loosable[i]--;
     }
     
+    return best_move();
 }
